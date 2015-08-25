@@ -86,7 +86,9 @@ public class JobContext {
 
     String stateStoreFsUri = jobProps.getProperty(ConfigurationKeys.STATE_STORE_FS_URI_KEY,
         ConfigurationKeys.LOCAL_FS_URI);
-    FileSystem stateStoreFs = FileSystem.get(URI.create(stateStoreFsUri), new Configuration());
+    Configuration config = loadConfiguration(jobProps);
+    System.out.println("secret: "+config.get("fs.s3.awsSecretAccessKey")	);
+    FileSystem stateStoreFs = FileSystem.get(URI.create(stateStoreFsUri),config);
     String stateStoreRootDir = jobProps.getProperty(ConfigurationKeys.STATE_STORE_ROOT_DIR_KEY);
     this.datasetStateStore = new FsDatasetStateStore(stateStoreFs, stateStoreRootDir);
 
@@ -116,6 +118,15 @@ public class JobContext {
         this.jobId, logger);
 
     this.logger = logger;
+  }
+  private Configuration loadConfiguration(Properties jobProps) {
+	    Configuration config = new Configuration();
+	  
+		config.set(ConfigurationKeys.ASW_S3_ACCESS_ID_KEY, jobProps.getProperty(ConfigurationKeys.ASW_S3_ACCESS_ID_KEY));
+		config.set(ConfigurationKeys.ASW_S3_SECRET_ACCESS_KEY, jobProps.getProperty(ConfigurationKeys.ASW_S3_SECRET_ACCESS_KEY));
+
+	  
+	  return config;
   }
 
   /**

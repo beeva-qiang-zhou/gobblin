@@ -47,6 +47,10 @@ public class ConfigurationKeys {
   // File system URI for file-system-based task store
   public static final String STATE_STORE_FS_URI_KEY = "state.store.fs.uri";
 
+  //File
+  public static final String STORE_FS_CONFIG_FILE_KEY = "store.fs.config.file";
+  public static final String ASW_S3_SECRET_ACCESS_KEY = "fs.s3.awsSecretAccessKey";
+  public static final String ASW_S3_ACCESS_ID_KEY = "fs.s3.awsAccessKeyId";
   // Directory where job lock files are stored
   public static final String JOB_LOCK_DIR_KEY = "job.lock.dir";
 
