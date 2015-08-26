@@ -51,6 +51,10 @@ public class ConfigurationKeys {
   public static final String STORE_FS_CONFIG_FILE_KEY = "store.fs.config.file";
   public static final String ASW_S3_SECRET_ACCESS_KEY = "fs.s3.awsSecretAccessKey";
   public static final String ASW_S3_ACCESS_ID_KEY = "fs.s3.awsAccessKeyId";
+  
+  public static final String ASW_S3N_ACCESS_ID_KEY = "fs.s3n.awsAccessKeyId";
+  public static final String ASW_S3N_SECRET_ACCESS_KEY = "fs.s3n.awsSecretAccessKey";
+
   // Directory where job lock files are stored
   public static final String JOB_LOCK_DIR_KEY = "job.lock.dir";
 

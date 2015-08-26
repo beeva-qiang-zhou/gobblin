@@ -20,7 +20,6 @@ import java.util.Properties;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-
 import org.slf4j.Logger;
 
 import com.google.common.base.Optional;
@@ -89,10 +88,11 @@ public class JobContext {
     String stateStoreFsUri = jobProps.getProperty(ConfigurationKeys.STATE_STORE_FS_URI_KEY,
         ConfigurationKeys.LOCAL_FS_URI);
     Configuration config = loadConfiguration(jobProps);
-    System.out.println("secret: "+config.get("fs.s3.awsSecretAccessKey")	);
     FileSystem stateStoreFs = FileSystem.get(URI.create(stateStoreFsUri),config);
     String stateStoreRootDir = jobProps.getProperty(ConfigurationKeys.STATE_STORE_ROOT_DIR_KEY);
+    System.out.println("stateStoreRootDir folder is : " +stateStoreRootDir);
     this.datasetStateStore = new FsDatasetStateStore(stateStoreFs, stateStoreRootDir);
+    System.out.println("DatasetStateStore created");
 
     boolean jobHistoryStoreEnabled = Boolean.valueOf(
         jobProps.getProperty(ConfigurationKeys.JOB_HISTORY_STORE_ENABLED_KEY, Boolean.FALSE.toString()));
@@ -114,9 +114,12 @@ public class JobContext {
     } else {
       this.jobMetricsOptional = Optional.absent();
     }
-
+    String sourceClass = jobProps.getProperty(ConfigurationKeys.SOURCE_CLASS_KEY);
+    System.out.println("Source class is : " + sourceClass);
+    Object sourceClassInstance = Class.forName(jobProps.getProperty(ConfigurationKeys.SOURCE_CLASS_KEY)).newInstance();
+    System.out.println("Source class instance created");
     this.source = new SourceDecorator(
-        Source.class.cast(Class.forName(jobProps.getProperty(ConfigurationKeys.SOURCE_CLASS_KEY)).newInstance()),
+        Source.class.cast(sourceClassInstance),
         this.jobId, logger);
 
     this.logger = logger;
@@ -126,7 +129,8 @@ public class JobContext {
 	  
 		config.set(ConfigurationKeys.ASW_S3_ACCESS_ID_KEY, jobProps.getProperty(ConfigurationKeys.ASW_S3_ACCESS_ID_KEY));
 		config.set(ConfigurationKeys.ASW_S3_SECRET_ACCESS_KEY, jobProps.getProperty(ConfigurationKeys.ASW_S3_SECRET_ACCESS_KEY));
-
+		config.set(ConfigurationKeys.ASW_S3N_ACCESS_ID_KEY, jobProps.getProperty(ConfigurationKeys.ASW_S3_ACCESS_ID_KEY));
+		config.set(ConfigurationKeys.ASW_S3N_SECRET_ACCESS_KEY, jobProps.getProperty(ConfigurationKeys.ASW_S3_SECRET_ACCESS_KEY));
 	  
 	  return config;
   }
